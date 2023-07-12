@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
     // Start version with 1
     // increment by 1 whenever db schema changes.
-    private static final int DATABASE_VER = 1;
+    private static final int DATABASE_VER = 2;
     // Filename of the database
     private static final String DATABASE_NAME = "Song.db";
     private static final String TABLE_SONG = "song";
@@ -82,6 +82,28 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return songs;
     }
+    public int updateSong(Song data){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ID, data.getId());
+        values.put(COLUMN_TITLE, data.getTitle());
+        values.put(COLUMN_SINGERS, data.getSingers());
+        values.put(COLUMN_YEAR, data.getYear());
+        values.put(COLUMN_STARS, data.getStars());
+        String condition = COLUMN_ID + "= ?";
+        String[] args = {String.valueOf(data.getId())};
+        int result = db.update(TABLE_SONG, values, condition, args);
+        db.close();
+        return result;
+    }
+    public int deleteSong(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String condition = COLUMN_ID + "= ?";
+        String[] args = {String.valueOf(id)};
+        int result = db.delete(TABLE_SONG, condition, args);
+       db.close();
+        return result;
+    }
     public ArrayList<Song> getSongs() {
         ArrayList<Song> songs = new ArrayList<Song>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -104,4 +126,30 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return songs;
     }
+    public ArrayList<Song> getAllSongs(int keyword) {
+        ArrayList<Song> notes = new ArrayList<Song>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns= {COLUMN_ID, COLUMN_TITLE, COLUMN_SINGERS,COLUMN_YEAR,COLUMN_STARS};
+        String condition = COLUMN_STARS + " Like ?";
+        String[] args = { "%" +  keyword + "%"};
+        Cursor cursor = db.query(TABLE_SONG, columns, condition, args,
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String title= cursor.getString(1);
+                String singers= cursor.getString(2);
+                int years = cursor.getInt(3);
+                int stars= cursor.getInt(4);
+                Song note = new Song(id, title,singers,years,stars);
+                notes.add(note);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return notes;
+    }
+
 }
