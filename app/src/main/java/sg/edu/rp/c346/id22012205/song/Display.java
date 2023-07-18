@@ -54,7 +54,7 @@ public class Display extends AppCompatActivity {
                         fiveS.add(song);
 
                     }
-                    ArrayAdapter<Song> adapter=new ArrayAdapter<>(Display.this, android.R.layout.simple_list_item_1, fiveS);
+                    ArrayAdapter<Song> adapter=new CustomAdapter(Display.this,R.layout.row,fiveS);
                     lvsongs.setAdapter(adapter);
                 }
 
