@@ -63,7 +63,7 @@ public class Song implements Serializable {
             for (int i = 0; i < stars; i++) {
                 star += "*";
             }
-            return id + "\n" + title + "\n" + singers + "-" + year + "\n" + "Rating:" + star;
+            return  title +"\n" + year + "-" + star+ "\n" + singers;
         }
 
     }

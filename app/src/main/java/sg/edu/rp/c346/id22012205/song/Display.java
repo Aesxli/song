@@ -14,11 +14,13 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class Display extends AppCompatActivity {
-ListView lvsongs;
-Button btnf,btnback;
+    ListView lvsongs;
+    Button btnf,btnback;
 
     ArrayList<Song> alSong;
-    ArrayAdapter<Song> aaSong;
+
+
+    CustomAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,19 +28,18 @@ Button btnf,btnback;
         lvsongs=findViewById(R.id.lv);
         btnf=findViewById(R.id.btnfilter);
         btnback=findViewById(R.id.btnback);
-
-
         DBHelper DBH=new DBHelper(Display.this);
         alSong=DBH.getSongs();
-        aaSong= new ArrayAdapter(this, android.R.layout.simple_list_item_1, alSong);
-        lvsongs.setAdapter(aaSong);
+        adapter=new CustomAdapter(this,R.layout.row,alSong);
+        lvsongs.setAdapter(adapter);
         lvsongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int
                     position, long identity) {
-                 Song dsong = alSong.get(position);
+                Song dsong = alSong.get(position);
                 Intent i = new Intent(Display.this,
                         Edit.class);
+                i.putExtra("id",position);
                 i.putExtra("song", dsong);
                 startActivity(i);
             }
@@ -50,7 +51,7 @@ Button btnf,btnback;
                 ArrayList<Song> fiveS=new ArrayList<>();
                 for (Song song: alSong) {
                     if(song.getStars()==5){
-                   fiveS.add(song);
+                        fiveS.add(song);
 
                     }
                     ArrayAdapter<Song> adapter=new ArrayAdapter<>(Display.this, android.R.layout.simple_list_item_1, fiveS);
@@ -69,3 +70,4 @@ Button btnf,btnback;
     }
 
 }
+

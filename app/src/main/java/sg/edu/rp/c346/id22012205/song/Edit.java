@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.time.Year;
+
 public class Edit extends AppCompatActivity {
     EditText etID,etST2,etS2,etY2;
     Button btnC,btnU,btnD;
@@ -18,63 +20,7 @@ public class Edit extends AppCompatActivity {
     RadioButton rb1,rb2,rb3,rb4,rb5;
    Song songe;
    int stars=0;
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //Step 1a: Get the user input from the EditText and store it in a variable
-        Integer ID= Integer.valueOf((etID.getText().toString()));
-        String ST=etST2.getText().toString();
-        String S=etS2.getText().toString();
-        Integer Y= Integer.valueOf((etY2.getText().toString()));
-        Integer SR=Integer.valueOf(stars);
-        //Step 1b: Obtain an instance of the SharedPreferences
-        SharedPreferences prefs=getPreferences(MODE_PRIVATE);
-        //Step 1c: Obtain an instance of the SharedPreferences Editor for update later
-        SharedPreferences.Editor prefEdit= prefs.edit();
-        //Step 1d: Set a key-value pair in the editor
-        prefEdit.putInt("ID", ID);
-        prefEdit.putString("Song Title",ST );
-        prefEdit.putString("Singer",S);
-        prefEdit.putInt("Year", Y);
-        prefEdit.putInt("Star",SR);
 
-        //Step 1e:Call commit() to save the changes made to the SharedPreference
-        prefEdit.commit();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //Step 2a:Obtain the SHaredPreferences instance
-        SharedPreferences prefs=getPreferences(MODE_PRIVATE);
-        //Step 2b: Retrieve the saved data from the SharedPreferences object
-        Integer ID = prefs.getInt("ID", songe.getId());
-        String ST=prefs.getString("Song Title", songe.getTitle());
-        String S=prefs.getString("Singer", songe.getSingers());
-        Integer Y = prefs.getInt("Year", songe.getYear());
-        Integer SR = prefs.getInt("Star", songe.getStars());
-        //with a default value if no matching data
-        etID.setHint(String.valueOf(ID));
-        etST2.setText(ST);
-        etS2.setText(S);
-        etY2.setText(String.valueOf(Y));
-        if(SR==1){
-            boolean b = true;
-            rb1.setChecked(b);
-        }else if (SR==2) {
-            boolean b = true;
-            rb2.setChecked(b);
-        }else if (SR==3) {
-            boolean b = true;
-            rb3.setChecked(b);
-        }else if (SR==4) {
-            boolean b = true;
-            rb4.setChecked(b);
-        }else if (SR==5) {
-            boolean b = true;
-            rb5.setChecked(b);
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +38,26 @@ public class Edit extends AppCompatActivity {
         rb3=findViewById(R.id.rb3);
         rb4=findViewById(R.id.rb4);
         rb5=findViewById(R.id.rb5);
+
         Intent i = getIntent();
         songe = (Song) i.getSerializableExtra("song");
+        int id = i.getIntExtra("id",0);
+        etID.setText(String.valueOf(id+1));
+        etST2.setText(songe.getTitle());
+        etS2.setText(songe.getSingers());
+        etY2.setText(String.valueOf(songe.getYear()));
+        int starC=((songe.getStars()));
+        if(starC==1){
+            RG.check(R.id.rb1);
+        } else if (starC==2) {
+            RG.check(R.id.rb2);
+        }else if (starC==3) {
+            RG.check(R.id.rb3);
+        }else if (starC==4) {
+            RG.check(R.id.rb4);
+        }else if (starC==5) {
+            RG.check(R.id.rb5);
+        }
         btnU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

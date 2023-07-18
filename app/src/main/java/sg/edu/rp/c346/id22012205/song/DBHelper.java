@@ -126,9 +126,32 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return songs;
     }
+   /* public ArrayList<Song> getAllSongs(){
+        ArrayList<Song> songs = new ArrayList<Song>();
+        SQLiteDatabase db =this.getReadableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_TITLE, COLUMN_SINGERS,COLUMN_YEAR,COLUMN_STARS};
+        Cursor cursor;
+        cursor =db.query(TABLE_SONG, columns, null,null,null,null,null,null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id= cursor.getInt(0);
+                String title =cursor.getString(1);
+                String singers = cursor.getString(2);
+                int year = cursor.getInt(3);
+                int stars = cursor.getInt(4);
+
+                Song song = new Song(id,title,singers,year,stars);
+                songs.add(song);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return songs;
+    }*/
+
     public ArrayList<Song> getAllSongs(int keyword) {
         ArrayList<Song> notes = new ArrayList<Song>();
-
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns= {COLUMN_ID, COLUMN_TITLE, COLUMN_SINGERS,COLUMN_YEAR,COLUMN_STARS};
         String condition = COLUMN_STARS + " Like ?";
@@ -150,6 +173,31 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return notes;
+    }
+    public ArrayList<Song> getSongByYear(int year){
+        ArrayList<Song> songs = new ArrayList<Song>();
+        SQLiteDatabase db =this.getReadableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_TITLE, COLUMN_SINGERS,COLUMN_YEAR,COLUMN_STARS};
+        String condition = COLUMN_YEAR + "= ?";
+        String[] args = {year + ""};
+        Cursor cursor;
+        cursor =db.query(TABLE_SONG, columns, condition,args,null,null,null,null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id= cursor.getInt(0);
+                String title =cursor.getString(1);
+                String singers = cursor.getString(2);
+                int year2 = cursor.getInt(3);
+                int stars = cursor.getInt(4);
+
+                Song song = new Song(id,title,singers,year2,stars);
+                songs.add(song);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return songs;
     }
 
 }
